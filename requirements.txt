@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+manim
+langchain
+faiss-cpu
+openai
+pydantic
+python-dotenv
+sentence-transformers

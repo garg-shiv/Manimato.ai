@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+generated/
+*.faiss.index
+*.mp4
