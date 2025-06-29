@@ -1,25 +1,24 @@
 import os
-from fastapi import APIRouter, HTTPException
-from schemas.inference import Prompt
-from services.chain_manager import generate_manim_code
-from services.render_service import render_manim_script
+from fastapi import APIRouter, Depends, HTTPException
+from app.schemas.inference import InferenceRequest
+from app.services.chain_manager import ChainManager
+from app.deps import get_chain_manager
 
 router = APIRouter()
 
 @router.post("/generate-video")
-def generate_video(data: Prompt):
+async def generate_video(
+    data: InferenceRequest,
+    chain_manager: ChainManager = Depends(get_chain_manager)
+):
     try:
-        # Step 1: Generate Manim Python code from prompt
-        script = generate_manim_code(data.prompt)
+        # Step 1 & 2: Generate script + render video
+        result = await chain_manager.generate_video_from_prompt(data.prompt)
 
-        # Step 2: Render the script into a video
-        video_path = render_manim_script(script)
-        filename = os.path.basename(video_path)
-
-        # Step 3: Return the relative URL to the client
+        # Step 3: Return relative URL
         return {
             "status": "success",
-            "video_url": f"/videos/{filename}"
+            "video_url": f"/videos/{os.path.basename(result)}"
         }
 
     except Exception as e:
