@@ -13,7 +13,7 @@ from langchain_openai import ChatOpenAI
 from app.schemas.inference import InferenceRequest, InferenceResponse
 from app.services.render_service import render_manim_script
 load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENROUTER_API_KEY") or "dummy"
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY") or "dummy"
 os.environ["OPENAI_API_BASE"] = "https://openrouter.ai/api/v1"
 
 class ChainManager:
