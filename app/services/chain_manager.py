@@ -1,60 +1,93 @@
-"""Chain manager for LangChain operations."""
-
-from langchain.chains import LLMChain
+import os
+import json
+import faiss
+import numpy as np
+from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
-from app.schemas.inference import InferenceRequest, InferenceResponse
-from app.core.llm_provider import llm_provider
-from app.core.logger import logger
+from langchain_core.documents import Document
+from langchain.chains import RetrievalQA
+from langchain_community.vectorstores import FAISS
+from langchain_community.docstore.in_memory import InMemoryDocstore
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_openai import ChatOpenAI
 
+load_dotenv()
 
-class ChainManager:
-    """Manager for LangChain operations."""
-    
-    def __init__(self):
-        self.llm = llm_provider.llm
-        self._chains = {}
-    
-    async def run_inference(self, request: InferenceRequest) -> InferenceResponse:
-        """Run inference using LangChain."""
-        try:
-            logger.info(f"Running inference with prompt: {request.prompt[:100]}...")
-            
-            # Create or get chain
-            chain = self._get_or_create_chain(request.chain_type)
-            
-            # Run chain
-            result = await chain.arun(
-                input_text=request.prompt,
-                **request.parameters
-            )
-            
-            response = InferenceResponse(
-                result=result,
-                chain_type=request.chain_type
-            )
-            
-            logger.info("Inference completed successfully")
-            return response
-            
-        except Exception as e:
-            logger.error(f"Error running inference: {str(e)}")
-            raise
-    
-    def _get_or_create_chain(self, chain_type: str) -> LLMChain:
-        """Get or create a chain by type."""
-        if chain_type not in self._chains:
-            self._chains[chain_type] = self._create_chain(chain_type)
-        return self._chains[chain_type]
-    
-    def _create_chain(self, chain_type: str) -> LLMChain:
-        """Create a new chain."""
-        templates = {
-            "simple": "Answer the following question: {input_text}",
-            "analysis": "Analyze the following text in detail: {input_text}",
-            "summary": "Provide a concise summary of: {input_text}"
-        }
-        
-        template = templates.get(chain_type, templates["simple"])
-        prompt = PromptTemplate(template=template, input_variables=["input_text"])
-        
-        return LLMChain(llm=self.llm, prompt=prompt)
+def generate_manim_code(query: str) -> str:
+    # === Load LLM ===
+    llm = ChatOpenAI(
+        model_name="meta-llama/llama-4-maverick:free",
+        temperature=0,
+        openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+        openai_api_base="https://openrouter.ai/api/v1"
+    )
+
+    # === Load FAISS Index and Mapping ===
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    index_path = os.path.join(base_dir, "..", "..", "cleaned_manim_faiss.index")
+    mapping_path = os.path.join(base_dir, "..", "..", "cleaned_index_mapping.json")
+
+    index = faiss.read_index(index_path)
+    with open(mapping_path, "r", encoding="utf-8") as f:
+        doc_data = json.load(f)
+
+    documents = [Document(page_content=d["content"]) for d in doc_data]
+    doc_ids = [str(i) for i in range(len(documents))]
+    docstore = InMemoryDocstore(dict(zip(doc_ids, documents)))
+    index_to_docstore_id = {i: doc_ids[i] for i in range(len(doc_ids))}
+
+    embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+
+    vectorstore = FAISS(
+        index=index,
+        docstore=docstore,
+        index_to_docstore_id=index_to_docstore_id,
+        embedding_function=embedding_model
+    )
+
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
+
+    prompt_template = PromptTemplate(
+        input_variables=["question", "context"],
+        template="""
+    You are to generate a valid Python script using **only** the Manim and math libraries for Manim Community v0.19.
+    Output raw Python code only. Do not use Markdown formatting (no triple backticks). Do not include ```python or any code fences.
+
+    **Rules:**
+    - Output only raw Python code — no Markdown, no triple backticks.
+    - Do not include explanations, comments, or helper functions.
+    - Do not import any modules except `manim` and `math`.
+    - Use only variable names of 1–2 characters.
+    - Never use infinite loops.
+    - The animation must last at least 5 seconds.
+    - The script must end with a `self.play(...)` call.
+    - Assume it will be rendered directly using `manim`.
+
+    **Use this scaffold:**
+
+    from manim import *
+    from math import *
+
+    class GenScene(Scene):
+        def construct(self):
+            # Write here
+
+    User input:
+    {question}
+
+    Relevant examples:
+    {context}
+    """
+    )
+
+    # === QA Chain ===
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        chain_type="stuff",
+        input_key="query",
+        chain_type_kwargs={"prompt": prompt_template}
+    )
+
+    response = qa_chain({"query": query})
+    return response["result"]
