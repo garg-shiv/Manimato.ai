@@ -1,9 +1,30 @@
-fastapi
-uvicorn
-manim
-langchain
-faiss-cpu
-openai
-pydantic
-python-dotenv
-sentence-transformers
+# FastAPI and ASGI server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+gunicorn==21.2.0
+
+# Pydantic and validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# LangChain and LLM integration
+langchain==0.0.348
+langchain-google-genai==0.0.6
+google-generativeai==0.3.2
+
+# HTTP and async libraries
+httpx==0.25.2
+aiofiles==23.2.1
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Development and testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+
+# Security
+python-multipart==0.0.6

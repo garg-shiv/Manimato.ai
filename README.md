@@ -1,69 +1,164 @@
-# 🧠 RAG-Powered Manim Video Generator (LangChain + FastAPI)
+# FastAPI LLM Service
 
-**Manimato.ai** is an AI-powered web app that translates natural language prompts into Manim animations using Retrieval-Augmented Generation (RAG), LLM-driven code synthesis, and real-time video rendering. It uses a vector database of 500+ indexed Manim examples and official docs to guide generation. Designed for cost-efficiency and high-quality output using open-source components.
+A FastAPI-based service for LLM interactions using Google's Gemini API and LangChain.
 
-- ✅ 90%+ generation accuracy  
-- 💰 ~80% reduction in token usage via top-k semantic retrieval  
-- ⚡ Real-time rendering using Manim  
-- 🧠 Built with LangChain, FAISS, OpenRouter, FastAPI  
+## Features
 
-## 🔧 Setup
+- **FastAPI Framework**: Modern, fast (high-performance) web framework
+- **Gemini Integration**: Google's Gemini AI model integration
+- **LangChain Support**: Advanced LLM chain operations
+- **Async Operations**: Full async/await support
+- **Request Logging**: Comprehensive request/response logging
+- **Error Handling**: Custom exception handling
+- **CORS Support**: Cross-origin resource sharing
+- **Health Checks**: Built-in health check endpoints
 
-```bash
-git clone https://github.com/your-username/manimato-ai
-cd manimato-ai
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-📡 API Usage
-POST /generate-video
-
-Example request
-
-```json
-{
-  "prompt": "Draw a triangle turning into a square"
-}
+## Project Structure
 
 ```
-Example response
-```json
-{
-  "status": "success",
-  "video_path": "generated/output_abcd1234.mp4"
-}
-
-```
-## ⚙️ How It Works
-
-- User submits a natural language prompt to the `/generate-video` endpoint.
-- LangChain performs top-k retrieval from a FAISS index of 500+ Manim examples and official docs.
-- Retrieved chunks are inserted into a Manim-specific prompt template.
-- A language model (via OpenRouter) generates valid Manim-compatible Python code.
-- The script is saved to a temporary file.
-- Manim CLI is used to render it into a video via subprocess.
-- The API responds with the path to the generated `.mp4`.
-
-📁 Project Structure
-```bash
-
-├── main.py                         # FastAPI app
-├── f1.py                           # LangChain + RAG + LLM code generation
-├── f2.py                           # Manim video rendering logic
+your_project/
+├── app/
+│   ├── api/                        # Entry point for HTTP APIs
+│   │   ├── v1/
+│   │   │   ├── endpoints/          # Route controllers
+│   │   │   │   ├── chat.py
+│   │   │   │   └── inference.py
+│   │   │   └── router.py
+│   ├── core/                       # Core system-wide functionality
+│   │   ├── config.py               # Env + settings
+│   │   ├── logger.py               # Logging setup
+│   │   └── llm_provider.py         # Gemini/LangChain setup
+│   ├── services/                   # Business logic layer
+│   │   ├── chat_service.py
+│   │   ├── chain_manager.py
+│   │   └── prompt_templates.py
+│   ├── schemas/                    # Pydantic request/response models
+│   │   ├── chat.py
+│   │   └── inference.py
+│   ├── utils/                      # Shared utilities
+│   │   ├── retry.py
+│   │   └── helpers.py
+│   ├── exceptions/                # Custom exception handlers
+│   │   └── handlers.py
+│   ├── middlewares/              # Custom middlewares (CORS, logging)
+│   │   └── request_logger.py
+│   ├── main.py                    # FastAPI app
+│   └── deps.py                    # Shared dependencies
+├── tests/                         # Unit & integration tests
+│   ├── api/
+│   └── services/
+├── .env
 ├── requirements.txt
-├── cleaned_index_mapping.json      # Text chunks mapped to FAISS vector index
-├── cleaned_manim_faiss.index       # FAISS vector store
-├── render.yaml                     # Render deployment config
-└── README.md
-
+├── README.md
+├── gunicorn_conf.py              # For production server
+├── Dockerfile                    # Optional: for containerization
+├── docker-compose.yml           # Optional: multi-service deploy
+└── pyproject.toml                # Tooling config (black, isort, etc)
 ```
-🚀 Deployment
-You can deploy to Render using the included config:
 
+## Installation
+
+1. Clone the repository:
 ```bash
-
-# render.yaml is already configured
-# Just push the repo and connect it to your Render account
+git clone <repository-url>
+cd your_project
 ```
-Once deployed, send a POST request to /generate-video with your prompt and receive a fully rendered Manim video in return.
+
+2. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+5. Configure your Gemini API key in `.env`:
+```
+GEMINI_API_KEY=your_actual_api_key_here
+```
+
+## Usage
+
+### Development
+
+Run the development server:
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Or using Python directly:
+```bash
+python app/main.py
+```
+
+### Production
+
+Run with Gunicorn:
+```bash
+gunicorn app.main:app -c gunicorn_conf.py
+```
+
+## API Endpoints
+
+### Health Check
+- `GET /health` - Health check endpoint
+
+### Chat API
+- `POST /api/v1/chat/chat` - Chat with the LLM
+
+### Inference API
+- `POST /api/v1/inference/inference` - Run LLM inference
+
+## API Documentation
+
+Once the server is running, visit:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+## Configuration
+
+Configuration is managed through environment variables. See `.env` file for available options:
+
+- `ENVIRONMENT`: Environment (development/production)
+- `DEBUG`: Enable debug mode
+- `GEMINI_API_KEY`: Your Gemini API key
+- `LLM_MODEL`: Gemini model to use
+- `LOG_LEVEL`: Logging level
+
+## Testing
+
+Run tests:
+```bash
+pytest
+```
+
+Run tests with coverage:
+```bash
+pytest --cov=app
+```
+
+## Development Tools
+
+Format code:
+```bash
+black app/
+isort app/
+```
+
+Lint code:
+```bash
+flake8 app/
+```
+
+## License
+
+This project is licensed under the MIT License.
