@@ -1,0 +1,54 @@
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment
+.env
+
+# Virtualenv
+.venv/
+env/
+venv/
+ENV/
+
+# Editor/IDE configs
+.vscode/
+.idea/
+
+# Mac and system files
+.DS_Store
+Thumbs.db
+
+# Compiled/temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Testing
+.coverage
+.cache/
+.pytest_cache/
+
+# Build artifacts
+dist/
+build/
+
+# Manim output
+media/
+*.mp4
+
+# Docker
+generated/
+docker-compose.override.yml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# PyInstaller
+*.spec
+
+# Gunicorn logs
+gunicorn.log
