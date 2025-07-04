@@ -56,35 +56,71 @@ your_project/
 └── pyproject.toml                # Tooling config (black, isort, etc)
 ```
 
-## Installation
 
-1. Clone the repository:
+## Project Setup
+
+This project uses [`uv`](https://github.com/astral-sh/uv) for fast Python dependency management and [`taskipy`](https://github.com/illBeRoy/taskipy) for running developer tasks.
+
+---
+
+### Prerequisites
+
+- Python **3.12**
+- Git
+- [`pipx`](https://pypa.github.io/pipx/)
+- [`uv`](https://github.com/astral-sh/uv)
+
+---
+
+### Step 1: Install `pipx` (One-Time Setup)
+
+#### Linux / macOS
+
 ```bash
-git clone <repository-url>
-cd your_project
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+Then restart your terminal or run:
+
+```bash
+source ~/.bashrc   # or ~/.zshrc
 ```
 
-2. Create a virtual environment:
+#### Windows (PowerShell)
+```powershell
+python -m pip install --user pipx
+python -m pipx ensurepath
+``` 
+Restart the terminal to apply the updated PATH.
+
+### Step 2: Install uv with pipx
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+  pipx install uv
+```
+verify installation:
+```bash
+  uv --version
 ```
 
-3. Install dependencies:
+### Step 3: Set Up the Project
+1. Clone the Repostiory
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/garg-shiv/Manimato.ai.git
+cd manimato.ai
+```
+2. Sync environment using uv:
+
+This will install both main and development dependencies, and automatically create a virtual environment `(.venv)`:
+```bash
+  uv sync --extras dev
 ```
 
-4. Set up environment variables:
+3. Set up environment variables:
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
-5. Configure your Gemini API key in `.env`:
-```
-GEMINI_API_KEY=your_actual_api_key_here
-```
 
 ## Usage
 
@@ -92,20 +128,9 @@ GEMINI_API_KEY=your_actual_api_key_here
 
 Run the development server:
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+task dev
 ```
 
-Or using Python directly:
-```bash
-python app/main.py
-```
-
-### Production
-
-Run with Gunicorn:
-```bash
-gunicorn app.main:app -c gunicorn_conf.py
-```
 
 ## API Endpoints
 
