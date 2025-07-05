@@ -2,7 +2,8 @@
 
 import asyncio
 import functools
-from typing import Callable, Any, Type, Tuple
+from typing import Any, Callable, Tuple, Type
+
 from app.core.logger import logger
 
 

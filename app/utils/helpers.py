@@ -1,9 +1,9 @@
 """Helper utility functions."""
 
-import uuid
 import json
-from typing import Any, Dict, Optional
+import uuid
 from datetime import datetime
+from typing import Any, Dict, Optional
 
 
 def generate_uuid() -> str:

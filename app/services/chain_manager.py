@@ -1,17 +1,19 @@
-import os
 import json
+import os
+
 import faiss
-import numpy as np
 from dotenv import load_dotenv
-from langchain.prompts import PromptTemplate
-from langchain_core.documents import Document
 from langchain.chains import RetrievalQA
-from langchain_community.vectorstores import FAISS
+from langchain.prompts import PromptTemplate
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
+
 from app.schemas.inference import InferenceRequest, InferenceResponse
 from app.services.render_service import render_manim_script
+
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY") or "dummy"
 os.environ["OPENAI_API_BASE"] = "https://openrouter.ai/api/v1"

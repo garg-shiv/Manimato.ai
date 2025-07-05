@@ -52,3 +52,9 @@ docker-compose.override.yml
 
 # Gunicorn logs
 gunicorn.log
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+.ruff_cache/

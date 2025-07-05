@@ -1,7 +1,8 @@
 import os
+import shutil
 import subprocess
 import uuid
-import shutil
+
 
 def render_manim_script(script: str) -> str:
     base_dir = os.path.dirname(os.path.abspath(__file__))

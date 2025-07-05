@@ -20,7 +20,6 @@ dev = [
   "ruff>=0.12.2",
   "pytest",
   "taskipy",
-  "pre-commit>=4.2.0",
 ]
 
 [tool.taskipy.tasks]
@@ -35,10 +34,7 @@ export = "uv export --format=requirements.txt --without-hashes > requirements.tx
 [tool.ruff]
 line-length = 88
 target-version = "py312"
-extend-select = ["I"]  
-extend-ignore = ["E203", "W503"]  
 
-[tool.ruff.exclude]
 exclude = [
   ".git",
   ".venv",
@@ -50,11 +46,26 @@ exclude = [
 ]
 
 [tool.ruff.lint]
+extend-ignore = ["E203"]
+extend-select = ["I"]  # isort-style import sorting
 preview = true
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+
 
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-tab-width = 4
 line-ending = "lf"
+exclude = [
+  ".git",
+  ".venv",
+  "build",
+  "dist",
+  "migrations",
+  "scripts/experimental.py",
+  "legacy_code/"
+]

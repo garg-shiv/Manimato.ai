@@ -1,9 +1,10 @@
 """Inference API endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException
+
+from app.deps import get_chain_manager
 from app.schemas.inference import InferenceRequest, InferenceResponse
 from app.services.chain_manager import ChainManager
-from app.deps import get_chain_manager
 
 router = APIRouter()
 
