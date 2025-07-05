@@ -1,4 +1,5 @@
 from logging.config import fileConfig
+from multiprocessing import Value
 import os
 
 from sqlalchemy import engine_from_config
@@ -47,6 +48,8 @@ def run_migrations_offline() -> None:
 
     """
     url = os.getenv("DATABASE_URL")
+    if not url:
+        raise ValueError("DATABASE_URL environment variable is not set")
     context.configure(
         url=url,
         target_metadata=target_metadata,
