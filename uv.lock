@@ -585,6 +585,7 @@ dependencies = [
     { name = "langchain" },
     { name = "langchain-community" },
     { name = "langchain-openai" },
+    { name = "sqlalchemy" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -602,6 +603,7 @@ requires-dist = [
     { name = "langchain", specifier = "==0.1.20" },
     { name = "langchain-community", specifier = ">=0.0.38,<1.0.0" },
     { name = "langchain-openai", specifier = "==0.1.7" },
+    { name = "sqlalchemy", specifier = ">=2.0.41" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.35.0,<1.0.0" },
 ]
 
