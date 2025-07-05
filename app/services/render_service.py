@@ -5,6 +5,21 @@ import uuid
 
 
 def render_manim_script(script: str) -> str:
+    """
+    Render a Manim script and return the path to the generated video file.
+    
+    The function writes the provided Manim script to a temporary file, invokes the Manim CLI to render the "GenScene" scene, and searches for the resulting "output.mp4" file. The rendered video is copied to a generated output directory with a unique filename, and the path to this file is returned.
+    
+    Parameters:
+        script (str): The Manim script to render.
+    
+    Returns:
+        str: The path to the generated video file.
+    
+    Raises:
+        FileNotFoundError: If the rendered video file cannot be found.
+        RuntimeError: If the Manim rendering process fails.
+    """
     base_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(base_dir, "..", "..", "generated")
     os.makedirs(output_dir, exist_ok=True)

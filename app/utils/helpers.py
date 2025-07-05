@@ -7,7 +7,12 @@ from typing import Any, Dict, Optional
 
 
 def generate_uuid() -> str:
-    """Generate a UUID string."""
+    """
+    Generate and return a new UUID string using UUID version 4.
+    	
+    Returns:
+    	str: A randomly generated UUID in string format.
+    """
     return str(uuid.uuid4())
 
 
