@@ -2,6 +2,7 @@
 import os
 from logging.config import fileConfig
 from multiprocessing import Value
+from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
@@ -11,7 +12,8 @@ from alembic import context
 from app.database.base import Base
 from app.database.session import engine
 
-load_dotenv()
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(env_path, override=True)
 
 
 # this is the Alembic Config object, which provides
