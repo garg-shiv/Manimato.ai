@@ -21,6 +21,7 @@ dev = [
   "ruff>=0.12.2",
   "pytest",
   "taskipy",
+  "alembic>=1.16.2",
 ]
 
 [tool.taskipy.tasks]
@@ -31,6 +32,7 @@ lint = "ruff check ."
 lint-fix = "ruff check . --fix"
 test = "pytest"
 export = "uv export --format=requirements.txt --without-hashes > requirements.txt"
+migrate = "alembic upgrade head"
 
 [tool.ruff]
 line-length = 88
