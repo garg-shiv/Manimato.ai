@@ -1,6 +1,7 @@
-from app.database.base import Base
 from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.orm import relationship
+
+from app.database.base import Base
 
 
 class Chat(Base):
@@ -15,4 +16,3 @@ class Chat(Base):
     messages = relationship(
         "Message", back_populates="chat", cascade="all, delete-orphan"
     )
-

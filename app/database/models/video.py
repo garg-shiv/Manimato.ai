@@ -1,6 +1,7 @@
-from app.database.base import Base
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
+from app.database.base import Base
 
 
 class Video(Base):

@@ -1,5 +1,6 @@
-from app.database.base import Base
 from sqlalchemy import Column, ForeignKey, Integer, Text
+
+from app.database.base import Base
 
 
 class Code(Base):

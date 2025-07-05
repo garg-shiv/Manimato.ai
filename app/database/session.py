@@ -8,9 +8,12 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL is None:
-  raise ValueError("DATABASE_URL is not set in the environment")
+    raise ValueError("DATABASE_URL is not set in the environment")
 
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+    DATABASE_URL,
+    connect_args={"check_same_thread": False}
+    if DATABASE_URL.startswith("sqlite")
+    else {},
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

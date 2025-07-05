@@ -36,7 +36,7 @@ def truncate_text(text: str, max_length: int = 100, suffix: str = "...") -> str:
     """Truncate text to maximum length."""
     if len(text) <= max_length:
         return text
-    return text[:max_length - len(suffix)] + suffix
+    return text[: max_length - len(suffix)] + suffix
 
 
 def format_error_message(error: Exception, include_type: bool = True) -> str:
@@ -58,5 +58,6 @@ def merge_dicts(*dicts: Dict[str, Any]) -> Dict[str, Any]:
 def is_valid_email(email: str) -> bool:
     """Basic email validation."""
     import re
-    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(pattern, email) is not None

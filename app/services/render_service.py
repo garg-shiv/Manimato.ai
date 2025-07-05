@@ -21,7 +21,7 @@ def render_manim_script(script: str) -> str:
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
 
         # Manim saves to media/videos/<scene_id>/.../output.mp4, so we locate it
@@ -32,7 +32,9 @@ def render_manim_script(script: str) -> str:
             for file in files:
                 if file == "output.mp4":
                     manim_output_path = os.path.join(root, file)
-                    final_output_path = os.path.join(output_dir, f"{uuid.uuid4().hex[:8]}_output.mp4")
+                    final_output_path = os.path.join(
+                        output_dir, f"{uuid.uuid4().hex[:8]}_output.mp4"
+                    )
                     shutil.copyfile(manim_output_path, final_output_path)
                     return final_output_path
 

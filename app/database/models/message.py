@@ -1,8 +1,9 @@
 import enum
 
-from app.database.base import Base
 from sqlalchemy import Column, Enum, ForeignKey, Integer
 from sqlalchemy.orm import relationship
+
+from app.database.base import Base
 
 
 class SenderRole(enum.Enum):
