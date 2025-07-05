@@ -1,7 +1,7 @@
 # Optional: just for clarity, not mandatory
-from .user import User
-from .chat import Chat
-from .message import Message
-from .prompt import Prompt
-from .code import Code
-from .video import Video
+from .chat import Chat as Chat
+from .code import Code as Code
+from .message import Message as Message
+from .prompt import Prompt as Prompt
+from .user import User as User
+from .video import Video as Video
