@@ -11,8 +11,7 @@ router = APIRouter()
 
 @router.post("/inference", response_model=InferenceResponse)
 async def inference_endpoint(
-    request: InferenceRequest,
-    chain_manager: ChainManager = Depends(get_chain_manager)
+    request: InferenceRequest, chain_manager: ChainManager = Depends(get_chain_manager)
 ):
     """Handle inference requests."""
     try:

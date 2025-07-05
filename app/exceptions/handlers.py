@@ -7,7 +7,7 @@
 
 # class LLMServiceException(Exception):
 #     """Base exception for LLM service."""
-    
+
 #     def __init__(self, message: str, status_code: int = 500):
 #         self.message = message
 #         self.status_code = status_code
@@ -16,21 +16,21 @@
 
 # class LLMProviderException(LLMServiceException):
 #     """Exception for LLM provider errors."""
-    
+
 #     def __init__(self, message: str = "LLM provider error"):
 #         super().__init__(message, status_code=503)
 
 
 # class ValidationException(LLMServiceException):
 #     """Exception for validation errors."""
-    
+
 #     def __init__(self, message: str = "Validation error"):
 #         super().__init__(message, status_code=422)
 
 
 # class RateLimitException(LLMServiceException):
 #     """Exception for rate limiting."""
-    
+
 #     def __init__(self, message: str = "Rate limit exceeded"):
 #         super().__init__(message, status_code=429)
 

@@ -18,6 +18,7 @@ load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY") or "dummy"
 os.environ["OPENAI_API_BASE"] = "https://openrouter.ai/api/v1"
 
+
 class ChainManager:
     async def run_inference(self, request: InferenceRequest) -> InferenceResponse:
         query = request.prompt
@@ -25,10 +26,9 @@ class ChainManager:
         # === Load LLM ===
 
         llm = ChatOpenAI(
-        model="meta-llama/llama-4-maverick:free",
-        temperature=0.2,
-    )
-
+            model="meta-llama/llama-4-maverick:free",
+            temperature=0.2,
+        )
 
         # === Load FAISS Index and Mapping ===
         base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +50,7 @@ class ChainManager:
             index=index,
             docstore=docstore,
             index_to_docstore_id=index_to_docstore_id,
-            embedding_function=embedding_model
+            embedding_function=embedding_model,
         )
 
         retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
@@ -85,7 +85,7 @@ class ChainManager:
 
         Relevant examples:
         {context}
-        """
+        """,
         )
 
         # === QA Chain ===
@@ -94,7 +94,7 @@ class ChainManager:
             retriever=retriever,
             chain_type="stuff",
             input_key="query",
-            chain_type_kwargs={"prompt": prompt_template}
+            chain_type_kwargs={"prompt": prompt_template},
         )
 
         response = qa_chain({"query": query})
