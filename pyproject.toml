@@ -17,18 +17,44 @@ dependencies = [
 [dependency-groups]
 dev = [
   "taskipy>=1.14.1",
-  "black>=25.1.0",
   "ruff>=0.12.2",
   "pytest",
-  "taskipy"
+  "taskipy",
+  "pre-commit>=4.2.0",
 ]
 
 [tool.taskipy.tasks]
 dev = "uvicorn app.main:app --reload"
 start = "uvicorn app.main:app --host 0.0.0.0 --port 8000"
-format = "black ."
+format = "ruff format ."
 lint = "ruff check ."
 lint-fix = "ruff check . --fix"
 test = "pytest"
 export = "uv export --format=requirements.txt --without-hashes > requirements.txt"
 
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-select = ["I"]  
+extend-ignore = ["E203", "W503"]  
+
+[tool.ruff.exclude]
+exclude = [
+  ".git",
+  ".venv",
+  "build",
+  "dist",
+  "migrations",
+  "scripts/experimental.py",
+  "legacy_code/"
+]
+
+[tool.ruff.lint]
+preview = true
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+tab-width = 4
+line-ending = "lf"
