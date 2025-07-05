@@ -9,7 +9,7 @@ class Video(Base):
 
     id = Column(Integer, primary_key=True)
     message_id = Column(
-        Integer, ForeignKey("messages.id", ondelete="CASCADE"), unique=True
+        Integer, ForeignKey("messages.id", ondelete="CASCADE"),nullable=False, unique=True
     )
     public_id = Column(String, nullable=False)
 

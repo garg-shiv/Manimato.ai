@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy.orm import relationship
 
 from app.database.base import Base
 
@@ -13,4 +14,4 @@ class Code(Base):
     )
 
     # relationships
-    message = Column("Message", back_populates="code")
+    message = relationship("Message", back_populates="code")
