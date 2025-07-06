@@ -56,7 +56,6 @@ your_project/
 └── pyproject.toml                # Tooling config (black, isort, etc)
 ```
 
-
 ## Project Setup
 
 This project uses [`uv`](https://github.com/astral-sh/uv) for fast Python dependency management and [`taskipy`](https://github.com/illBeRoy/taskipy) for running developer tasks.
@@ -80,6 +79,7 @@ This project uses [`uv`](https://github.com/astral-sh/uv) for fast Python depend
 python3 -m pip install --user pipx
 python3 -m pipx ensurepath
 ```
+
 Then restart your terminal or run:
 
 ```bash
@@ -87,65 +87,78 @@ source ~/.bashrc   # or ~/.zshrc
 ```
 
 #### Windows (PowerShell)
+
 ```powershell
 python -m pip install --user pipx
 python -m pipx ensurepath
-``` 
+```
+
 Restart the terminal to apply the updated PATH.
 
 ### Step 2: Install uv with pipx
+
 ```bash
   pipx install uv
 ```
+
 verify installation:
+
 ```bash
   uv --version
 ```
 
 ### Step 3: Set Up the Project
+
 1. Clone the Repostiory
+
 ```bash
 git clone https://github.com/garg-shiv/Manimato.ai.git
 cd manimato.ai
 ```
+
 2. Sync environment using uv:
 
 This will install both main and development dependencies, and automatically create a virtual environment `(.venv)`:
+
 ```bash
   uv sync --extras dev
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
-
 
 ## Usage
 
 ### Development
 
 Run the development server:
+
 ```bash
 task dev
 ```
 
-
 ## API Endpoints
 
 ### Health Check
+
 - `GET /health` - Health check endpoint
 
 ### Chat API
+
 - `POST /api/v1/chat/chat` - Chat with the LLM
 
 ### Inference API
+
 - `POST /api/v1/inference/inference` - Run LLM inference
 
 ## API Documentation
 
 Once the server is running, visit:
+
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
@@ -162,11 +175,13 @@ Configuration is managed through environment variables. See `.env` file for avai
 ## Testing
 
 Run tests:
+
 ```bash
 pytest
 ```
 
 Run tests with coverage:
+
 ```bash
 pytest --cov=app
 ```
@@ -174,12 +189,14 @@ pytest --cov=app
 ## Development Tools
 
 Format code:
+
 ```bash
 black app/
 isort app/
 ```
 
 Lint code:
+
 ```bash
 flake8 app/
 ```

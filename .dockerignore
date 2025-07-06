@@ -6,21 +6,25 @@ __pycache__/
 *.egg-info/
 *.pyo
 *.pyd
++.ipynb_checkpoints/
 
 # ─── Virtual Environments ─────────────────────────────
 .venv/
 env/
 ENV/
 venv/
++.pdm-python/
 
 # ─── Git ──────────────────────────────────────────────
 .git/
 .gitignore
++.gitattributes
 
 # ─── IDE/Editor Configs ───────────────────────────────
 .vscode/
 .idea/
 *.swp
++*.code-workspace
 
 # ─── OS Metadata ──────────────────────────────────────
 .DS_Store
@@ -31,10 +35,14 @@ Thumbs.db
 *.sqlite3
 *.db
 *.dump
++.mypy_cache/
++.pytest_cache/
 
 # ─── Secrets / Env Vars ───────────────────────────────
 .env
 .env.*
++*.key
++*.pem
 
 # ─── Tests / Benchmarks ───────────────────────────────
 tests/
@@ -45,6 +53,8 @@ benchmarks/
 docker-compose.override.yml
 Dockerfile.old
 .dockerignore
++*.container
++*.log
 
 # ─── Build Artifacts / Scratch ────────────────────────
 *.bak
@@ -57,3 +67,8 @@ build/
 # ─── Experimental / WIP ───────────────────────────────
 scripts/experimental.py
 legacy_code/
+
+# ─── Editor backups ───────────────────────────────────
+*~
+*.orig
+*.rej
