@@ -1,39 +1,44 @@
 FROM python:3.11-slim-bookworm
 
+# --- Env vars for clean builds and runtime ---
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Install system dependencies for Manim
+# --- Install system + build dependencies for Manim + pycairo ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
+    gcc \
+    g++ \
     libcairo2-dev \
     libpango1.0-dev \
     libglib2.0-0 \
     libgl1-mesa-glx \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgomp1 \
+    ffmpeg \
+    curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install uv
+# --- Install uv package manager ---
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Install uvicorn globally
-RUN uv tool install uvicorn[standard]
-
-# Copy project files
+# --- Copy dependency metadata ---
 COPY pyproject.toml uv.lock ./
 
-# Install dependencies
+# --- Install all locked dependencies ---
 RUN uv sync --frozen --no-cache
 
-# Copy application code
+# --- Copy app source code ---
 COPY . .
 
-# Create non-root user
+# --- Create non-root user for security ---
 RUN adduser --disabled-password --gecos '' --shell /bin/bash user && \
     chown -R user:user /app
 

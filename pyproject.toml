@@ -1,77 +1,70 @@
 [project]
 name = "manimato-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "FastAPI backend for LangChain-based RAG system"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
+
 dependencies = [
-    "faiss-cpu>=1.11.0",
     "fastapi>=0.115.14,<1.0.0",
     "langchain==0.1.20",
     "langchain-community>=0.0.38,<1.0.0",
     "langchain-openai==0.1.7",
+    "langchain-google-genai==0.0.8",
+    "sqlalchemy==2.0.41",
+    "uvicorn[standard]==0.35.0",
     "manim>=0.18.1",
     "manimpango==0.6.0",
-    "sentence-transformers>=5.0.0",
-    "sqlalchemy>=2.0.41",
-    "uvicorn[standard]>=0.35.0,<1.0.0",
+    "pycairo==1.25.0"
 ]
 
-
-[dependency-groups]
+[tool.pdm.dev-dependencies]
 dev = [
-  "taskipy>=1.14.1",
-  "ruff>=0.12.2",
-  "pytest",
-  "taskipy",
-  "alembic>=1.16.2",
+    "taskipy==1.14.1",
+    "ruff>=0.12.2",
+    "pytest==8.2.2",
+    "alembic>=1.16.2"
 ]
 
 [tool.taskipy.tasks]
-dev = "uvicorn app.main:app"
+dev = "uvicorn app.main:app --reload"
 start = "uvicorn app.main:app --host 0.0.0.0 --port 8000"
 format = "ruff format ."
 lint = "ruff check ."
 lint-fix = "ruff check . --fix"
 test = "pytest"
-export = "uv export --format=requirements.txt --without-hashes > requirements.txt"
+export = "uv export --format=requirements.txt --no-hashes > requirements.txt"
 migrate = "alembic upgrade head"
 
 [tool.ruff]
 line-length = 88
-target-version = "py312"
-
+target-version = "py311"
 exclude = [
-  ".git",
-  ".venv",
-  "build",
-  "dist",
-  "migrations",
-  "scripts/experimental.py",
-  "legacy_code/"
+    ".git",
+    ".venv",
+    "build",
+    "dist",
+    "migrations",
+    "scripts/experimental.py",
+    "legacy_code/"
 ]
 
 [tool.ruff.lint]
 extend-ignore = ["E203"]
-extend-select = ["I"]  # isort-style import sorting
+extend-select = ["I"]
 preview = true
-
-# Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-
-
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 exclude = [
-  ".git",
-  ".venv",
-  "build",
-  "dist",
-  "migrations",
-  "scripts/experimental.py",
-  "legacy_code/"
+    ".git",
+    ".venv",
+    "build",
+    "dist",
+    "migrations",
+    "scripts/experimental.py",
+    "legacy_code/"
 ]

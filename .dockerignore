@@ -1,4 +1,4 @@
-# Python cache and compiled files
+# ─── Python ───────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.so
@@ -7,42 +7,53 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Virtual environments
+# ─── Virtual Environments ─────────────────────────────
 .venv/
 env/
 ENV/
 venv/
 
-# Git
+# ─── Git ──────────────────────────────────────────────
 .git/
 .gitignore
 
-# IDE/editor settings
+# ─── IDE/Editor Configs ───────────────────────────────
 .vscode/
 .idea/
+*.swp
 
-# OS metadata
+# ─── OS Metadata ──────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Logs and local dumps
+# ─── Logs / Dumps / Local Storage ─────────────────────
 *.log
 *.sqlite3
 *.db
 *.dump
 
-# Env files (will be added manually in container or secrets)
+# ─── Secrets / Env Vars ───────────────────────────────
 .env
 .env.*
 
-# Tests (not needed in production image)
+# ─── Tests / Benchmarks ───────────────────────────────
 tests/
+test_*.py
+benchmarks/
 
-# Docker junk
+# ─── Docker-related Junk ──────────────────────────────
 docker-compose.override.yml
 Dockerfile.old
 .dockerignore
 
-# Misc
+# ─── Build Artifacts / Scratch ────────────────────────
 *.bak
 *.tmp
+dist/
+build/
+*.tar.gz
+*.whl
+
+# ─── Experimental / WIP ───────────────────────────────
+scripts/experimental.py
+legacy_code/
