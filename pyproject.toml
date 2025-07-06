@@ -10,6 +10,8 @@ dependencies = [
     "langchain==0.1.20",
     "langchain-community>=0.0.38,<1.0.0",
     "langchain-openai==0.1.7",
+    "manim>=0.18.1",
+    "manimpango==0.6.0",
     "sentence-transformers>=5.0.0",
     "sqlalchemy>=2.0.41",
     "uvicorn[standard]>=0.35.0,<1.0.0",
