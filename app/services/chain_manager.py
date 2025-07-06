@@ -23,9 +23,14 @@ class ChainManager:
         self.embedding_model = genai.get_model("models/embedding-001")
         base_dir = os.path.dirname(os.path.abspath(__file__))
         mapping_path = os.path.join(base_dir, "..", "..", "cleaned_index_mapping.json")
-        with open(mapping_path, "r", encoding="utf-8") as f:
-            doc_data = json.load(f)
-        self.documents = [Document(page_content=d["content"]) for d in doc_data]
+        try:
+            with open(mapping_path, "r", encoding="utf-8") as f:
+                doc_data = json.load(f)
+            self.documents = [Document(page_content=d["content"]) for d in doc_data]
+            # Pre-compute document embeddings
+            self.doc_embeddings = [self._embed_with_gemini(doc.page_content) for doc in self.documents]
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            raise RuntimeError(f"Failed to load document mapping: {e}")
 
     def _embed_with_gemini(self, text: str) -> np.ndarray:
         try:
@@ -36,7 +41,7 @@ class ChainManager:
             )
             return np.array(res["embedding"], dtype=np.float32)
         except Exception:
-            return np.zeros(768, dtype=np.float32)  # Safe fallback
+            return np.zeros(3072, dtype=np.float32)  # Safe fallback
 
     def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
         denom = np.linalg.norm(a) * np.linalg.norm(b)
@@ -46,8 +51,7 @@ class ChainManager:
 
     def _retrieve_top_k(self, query: str, documents: list[Document], k: int = 10) -> list[Document]:
         query_emb = self._embed_with_gemini(query)
-        doc_embs = [self._embed_with_gemini(doc.page_content) for doc in documents]
-        similarities = [self._cosine_similarity(query_emb, doc_emb) for doc_emb in doc_embs]
+        similarities = [self._cosine_similarity(query_emb, doc_emb) for doc_emb in self.doc_embeddings]
         top_indices = np.argsort(similarities)[-k:][::-1]
         return [documents[i] for i in top_indices]
 
@@ -57,11 +61,11 @@ class ChainManager:
         # === Load LLM ===
         llm = ChatOpenAI(
             model="meta-llama/llama-4-maverick:free",
-            temperature=0.2,
+            temperature=0.1,
         )
 
         # === Retrieve top-k context ===
-        top_k_docs = self._retrieve_top_k(query, self.documents, k=10)
+        top_k_docs = self._retrieve_top_k(query, self.documents, k=4)
         context = "\n\n".join(doc.page_content for doc in top_k_docs)
 
         # === Prompt Template ===
