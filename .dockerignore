@@ -1,0 +1,48 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+env/
+ENV/
+venv/
+
+# Git
+.git/
+.gitignore
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Logs and local dumps
+*.log
+*.sqlite3
+*.db
+*.dump
+
+# Env files (will be added manually in container or secrets)
+.env
+.env.*
+
+# Tests (not needed in production image)
+tests/
+
+# Docker junk
+docker-compose.override.yml
+Dockerfile.old
+.dockerignore
+
+# Misc
+*.bak
+*.tmp
