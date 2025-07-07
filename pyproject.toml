@@ -10,24 +10,25 @@ dependencies = [
     "langchain==0.1.20",
     "langchain-community>=0.0.38,<1.0.0",
     "langchain-openai==0.1.7",
-    "langchain-google-genai==0.0.8",
     "sqlalchemy==2.0.41",
     "uvicorn[standard]==0.35.0",
     "manim>=0.18.1",
     "manimpango==0.6.0",
-    "pycairo==1.25.0"
+    "pycairo==1.25.0",
+    "google-generativeai>=0.5.0",
+    "numpy>=1.24.0"
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "taskipy==1.14.1",
+    "taskipy>=1.14.1",
     "ruff>=0.12.2",
     "pytest==8.2.2",
     "alembic>=1.16.2"
 ]
 
 [tool.taskipy.tasks]
-dev = "uvicorn app.main:app --reload"
+dev = "uvicorn app.main:app"
 start = "uvicorn app.main:app --host 0.0.0.0 --port 8000"
 format = "ruff format ."
 lint = "ruff check ."
