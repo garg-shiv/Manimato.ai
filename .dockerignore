@@ -1,30 +1,44 @@
 # ─── Python ───────────────────────────────────────────
-__pycache__/
+**/__pycache__/
 *.py[cod]
+*$py.class
 *.so
-*.egg
-*.egg-info/
+.Python
 *.pyo
 *.pyd
-+.ipynb_checkpoints/
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+*.bak
+*.tmp
+*.orig
+*.rej
+*.sage.py
 
 # ─── Virtual Environments ─────────────────────────────
 .venv/
 env/
 ENV/
 venv/
-+.pdm-python/
+env.bak/
+venv.bak/
+.pdm-python/
+.python-version
 
 # ─── Git ──────────────────────────────────────────────
 .git/
 .gitignore
-+.gitattributes
+.gitattributes
 
 # ─── IDE/Editor Configs ───────────────────────────────
 .vscode/
 .idea/
 *.swp
-+*.code-workspace
+*.code-workspace
+.spyderproject
+.spyproject
+.ropeproject
 
 # ─── OS Metadata ──────────────────────────────────────
 .DS_Store
@@ -35,14 +49,28 @@ Thumbs.db
 *.sqlite3
 *.db
 *.dump
-+.mypy_cache/
-+.pytest_cache/
+.mypy_cache/
+.pytest_cache/
+.cache
+.dmypy.json
+dmypy.json
+.nox/
+.tox/
+coverage.xml
+.coverage
+.coverage.*
+*.cover
+*.py,cover
+nosetests.xml
+htmlcov/
+.hypothesis/
 
 # ─── Secrets / Env Vars ───────────────────────────────
 .env
 .env.*
-+*.key
-+*.pem
+*.key
+*.pem
+local_settings.py
 
 # ─── Tests / Benchmarks ───────────────────────────────
 tests/
@@ -53,22 +81,81 @@ benchmarks/
 docker-compose.override.yml
 Dockerfile.old
 .dockerignore
-+*.container
-+*.log
+*.container
 
 # ─── Build Artifacts / Scratch ────────────────────────
-*.bak
-*.tmp
-dist/
 build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
 *.tar.gz
 *.whl
+MANIFEST
+.installed.cfg
+pip-log.txt
+pip-delete-this-directory.txt
 
-# ─── Experimental / WIP ───────────────────────────────
+# ─── Documentation ────────────────────────────────────
+docs/_build/
+site/
+
+# ─── Framework-specific ───────────────────────────────
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# mkdocs
+/site
+
+# Type Checkers / Static Analysis
+.pyre/
+.pytype/
+.pyre/
+.pytype/
+
+# Pipenv / Poetry / PDM / PEP 582
+Pipfile.lock
+poetry.lock
+.pdm.toml
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# ─── Project Specific ─────────────────────────────────
+generated/
+media/
+videos/
+*.mp4
 scripts/experimental.py
 legacy_code/
-
-# ─── Editor backups ───────────────────────────────────
-*~
-*.orig
-*.rej

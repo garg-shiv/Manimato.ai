@@ -60,7 +60,7 @@ class ChainManager:
 
         # === Load LLM ===
         llm = ChatOpenAI(
-            model="meta-llama/llama-4-maverick:free",
+            model="google/gemini-2.5-pro-exp-03-25",
             temperature=0.1,
         )
 
