@@ -16,12 +16,14 @@ def render_manim_script(script: str) -> str:
 
     try:
         subprocess.run(
-            ["manim", script_path, "GenScene", "-qk", "--output_file", "output.mp4"],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
+        ["manim", script_path, "GenScene", "-qk", "--output_file", "output.mp4"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8", 
+    )
+
 
         # Manim saves to media/videos/<scene_id>/.../output.mp4, so we locate it
         media_dir = os.path.join(base_dir, "..", "..", "media", "videos")
