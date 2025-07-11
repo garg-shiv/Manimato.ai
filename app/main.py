@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.routers.v1.endpoints.router import router as main_router
-from app.routers.v1.auth.signup import router as signup_router
-from app.routers.v1.auth.signin import router as signin_router
+
 from app.middlewares.cors import add_cors_middleware
 from app.middlewares.request_logger import add_request_logger_middleware
+from app.routers.v1.auth.signin import router as signin_router
+from app.routers.v1.auth.signup import router as signup_router
+from app.routers.v1.videos.router import router as main_router
 
 app = FastAPI()
 
