@@ -6,7 +6,7 @@ from app.deps import get_chain_manager
 from app.schemas.inference import InferenceRequest
 from app.services.chain_manager import ChainManager
 
-router = APIRouter()
+router = APIRouter(tags=["videos"])
 
 
 @router.post("/generate-video")
