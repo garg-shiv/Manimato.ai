@@ -50,7 +50,6 @@ your_project/
 ├── .env
 ├── requirements.txt
 ├── README.md
-├── gunicorn_conf.py              # For production server
 ├── Dockerfile                    # Optional: for containerization
 ├── docker-compose.yml           # Optional: multi-service deploy
 └── pyproject.toml                # Tooling config (black, isort, etc)
@@ -82,9 +81,10 @@ python3 -m pipx ensurepath
 
 Then restart your terminal or run:
 
-```bash
-source ~/.bashrc   # or ~/.zshrc
-```
+    ```bash
+    source ~/.bashrc   # or ~/.zshrc
+    ```
+
 
 #### Windows (PowerShell)
 
@@ -111,25 +111,30 @@ verify installation:
 
 1. Clone the Repostiory
 
-```bash
-git clone https://github.com/garg-shiv/Manimato.ai.git
-cd manimato.ai
-```
+    ```bash
+    git clone https://github.com/garg-shiv/Manimato.ai.git
+    cd manimato.ai
+    ```
 
-2. Sync environment using uv:
+2. Install System Dependencies (WSL/LINUX):
+    ```bash
+    sudo apt update
+    sudo apt install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
+    ```
+2. Sync environment using uv: 
 
-This will install both main and development dependencies, and automatically create a virtual environment `(.venv)`:
+    This will install both main and development dependencies, and automatically create a virtual environment `(.venv)`:
 
-```bash
-  uv sync --extras dev
-```
+    ```bash
+      uv sync --group dev
+    ```
 
 3. Set up environment variables:
 
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
+    ```bash
+    cp .env.example .env
+    # Edit .env with your configuration
+    ```
 
 ## Usage
 

@@ -1,10 +1,18 @@
+from pathlib import Path
+
+from core.config import config
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.api.v1.endpoints.router import router as main_router
-from app.api.v1.auth.signup import router as signup_router
-from app.api.v1.auth.signin import router as signin_router
+
 from app.middlewares.cors import add_cors_middleware
 from app.middlewares.request_logger import add_request_logger_middleware
+from app.routers.v1.router import router as v1_router
+
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(env_path, override=True)
+config.init()
+
 
 app = FastAPI()
 
@@ -13,10 +21,8 @@ add_cors_middleware(app)
 # Add request logger middleware
 add_request_logger_middleware(app)
 
-# ✅ INCLUDE these as API routers:
-app.include_router(signup_router, prefix="/auth")
-app.include_router(signin_router, prefix="/auth")
-app.include_router(main_router, prefix="/api/v1")
+# Include V1 router
+app.include_router(v1_router, prefix="/api/v1")
 
-# ✅ Mount ONLY static files here:
+# TODO: to be removed later
 app.mount("/videos", StaticFiles(directory="generated"), name="videos")

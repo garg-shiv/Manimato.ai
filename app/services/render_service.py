@@ -22,7 +22,7 @@ def render_manim_script(script: str) -> str:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            encoding="utf-8", 
+            encoding="utf-8",
         )
 
         # Manim saves to media/videos/<scene_id>/.../output.mp4, so we locate it
