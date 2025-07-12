@@ -50,7 +50,6 @@ your_project/
 ├── .env
 ├── requirements.txt
 ├── README.md
-├── gunicorn_conf.py              # For production server
 ├── Dockerfile                    # Optional: for containerization
 ├── docker-compose.yml           # Optional: multi-service deploy
 └── pyproject.toml                # Tooling config (black, isort, etc)

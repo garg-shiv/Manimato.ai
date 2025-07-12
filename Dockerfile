@@ -1,7 +1,5 @@
 # STAGE 1: BUILD psycopg2
-FROM python:3.11-slim-bookworm AS builder
-
-
+FROM python:3.11-slim-bookworm 
 
 # --- Env vars for clean builds and runtime ---
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -15,6 +13,11 @@ WORKDIR /app
 
 # --- Install system + build dependencies for Manim + pycairo ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    # psycopg2 build dependencies
+    libpq-dev \
+    python3-dev \
+    build-essential \
+    #other application dependencies
     gcc \
     g++ \
     libcairo2-dev \

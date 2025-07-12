@@ -36,7 +36,7 @@ prod = [
 ]
 
 [tool.taskipy.tasks]
-dev = "uvicorn app.main:app"
+dev = "uvicorn app.main:app --log-level debug"
 start = "uvicorn app.main:app --host 0.0.0.0 --port 8000"
 format = "ruff format ."
 lint = "ruff check ."
