@@ -1,9 +1,18 @@
+from pathlib import Path
+
+from core.config import config
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.middlewares.cors import add_cors_middleware
 from app.middlewares.request_logger import add_request_logger_middleware
 from app.routers.v1.router import router as v1_router
+
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(env_path, override=True)
+config.init()
+
 
 app = FastAPI()
 

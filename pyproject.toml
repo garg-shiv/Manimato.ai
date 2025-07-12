@@ -20,6 +20,7 @@ dependencies = [
     "passlib>=1.7.4",
     "jwt>=1.4.0",
     "pydantic[email]>=2.11.7",
+    "pydantic-settings>=2.10.1",
 ]
 
 [dependency-groups]
