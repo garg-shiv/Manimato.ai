@@ -127,7 +127,7 @@ verify installation:
     This will install both main and development dependencies, and automatically create a virtual environment `(.venv)`:
 
     ```bash
-      uv sync --extras dev
+      uv sync --group dev
     ```
 
 3. Set up environment variables:

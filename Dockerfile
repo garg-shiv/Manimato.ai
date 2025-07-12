@@ -1,4 +1,7 @@
-FROM python:3.11-slim-bookworm
+# STAGE 1: BUILD psycopg2
+FROM python:3.11-slim-bookworm AS builder
+
+
 
 # --- Env vars for clean builds and runtime ---
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -33,7 +36,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 COPY pyproject.toml uv.lock ./
 
 # --- Install all locked dependencies ---
-RUN uv sync --frozen --no-cache
+RUN uv sync --frozen --no-cache --group prod
 
 # --- Copy app source code ---
 COPY . .

@@ -16,7 +16,10 @@ dependencies = [
     "manimpango==0.6.0",
     "pycairo==1.25.0",
     "google-generativeai>=0.5.0",
-    "numpy>=1.24.0"
+    "numpy>=1.24.0",
+    "passlib>=1.7.4",
+    "jwt>=1.4.0",
+    "pydantic[email]>=2.11.7",
 ]
 
 [dependency-groups]
@@ -24,7 +27,12 @@ dev = [
     "taskipy>=1.14.1",
     "ruff>=0.12.2",
     "pytest==8.2.2",
-    "alembic>=1.16.2"
+    "alembic>=1.16.2",
+    "psycopg2-binary>=2.9,<3.0"
+]
+# dependency required only in production
+prod = [
+    "psycopg2>=2.9,<3.0",
 ]
 
 [tool.taskipy.tasks]
@@ -36,7 +44,7 @@ lint-fix = "ruff check . --fix"
 test = "pytest"
 export = "uv export --format=requirements.txt --no-hashes > requirements.txt"
 migrate = "alembic upgrade head"
-clean-pycache = "echo 'Running: clean-pycache' && find . -type d -name '__pycache__' -exec rm -r {} +"
+clean-pycache = "echo 'Running: clean-pycache' && find . -type d -name '__pycache__' -print -exec rm -r {} +"
 
 [tool.ruff]
 line-length = 88
