@@ -1,5 +1,8 @@
 import logging
 from pathlib import Path
+from app.routers.health import router as health_router
+
+
 
 from core.config import config
 from dotenv import load_dotenv
@@ -33,6 +36,7 @@ add_request_logger_middleware(app)
 
 # Include V1 router
 app.include_router(v1_router, prefix="/api")
-
+# Add this line near your other `include_router` calls
+app.include_router(health_router)
 # TODO: to be removed later
 app.mount("/videos", StaticFiles(directory="generated"), name="videos")
