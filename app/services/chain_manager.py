@@ -11,13 +11,14 @@ from pydantic.v1 import SecretStr  # This is from Pydantic v1 compat mode
 
 from app.schemas.inference import InferenceRequest, InferenceResponse
 from app.services.render_service import render_manim_script
+from core.config import config
 
 # pyright: reportPrivateImportUsage=false
 # Load .env values
 load_dotenv()
 
 # Configure Gemini embedding model
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "dummy"))
+genai.configure(api_key=config.GEMINI_API_KEY)
 
 
 class ChainManager:

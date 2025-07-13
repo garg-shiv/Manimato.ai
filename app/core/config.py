@@ -4,6 +4,7 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 
+
 class Settings(BaseSettings):
     # Required environment variables (must be non-empty)
     DATABASE_URL: str = Field(..., description="Database connection URL")
@@ -78,3 +79,5 @@ def create_config() -> Settings:
 
 # Instantiate this globally
 config = create_config()
+
+
