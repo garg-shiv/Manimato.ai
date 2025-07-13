@@ -1,7 +1,7 @@
 import enum
 
-from sqlalchemy import Column, Enum, ForeignKey, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import Enum, ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
@@ -14,11 +14,10 @@ class SenderRole(enum.Enum):
 class Message(Base):
     __tablename__ = "messages"
 
-    id = Column(Integer, primary_key=True, index=True)
-    chat_id = Column(
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    chat_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("chats.id", ondelete="CASCADE"), nullable=False
     )
-    sender = Column(Enum(SenderRole), nullable=False)
 
     # Relationships
     chat = relationship("Chat", back_populates="messages")
