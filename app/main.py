@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from core.config import config
@@ -13,8 +14,17 @@ env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path, override=True)
 config.init()
 
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
-app = FastAPI()
+
+app = FastAPI(
+    title="Manim Code Generator API",
+    description="API for generating Manim animations from natural language prompts",
+    version="1.0.0",
+)
 
 # Add CORS middleware
 add_cors_middleware(app)
@@ -22,7 +32,7 @@ add_cors_middleware(app)
 add_request_logger_middleware(app)
 
 # Include V1 router
-app.include_router(v1_router, prefix="/api/v1")
+app.include_router(v1_router, prefix="/api")
 
 # TODO: to be removed later
 app.mount("/videos", StaticFiles(directory="generated"), name="videos")

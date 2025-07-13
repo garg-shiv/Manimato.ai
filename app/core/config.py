@@ -4,7 +4,6 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 
-
 class Settings(BaseSettings):
     # Required environment variables (must be non-empty)
     DATABASE_URL: str = Field(..., description="Database connection URL")
@@ -13,6 +12,12 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = Field(..., description="Gemini API key")
     OPENAI_LLM: str = Field(..., description="Which OpenAI LLM to use")
     OPENAI_API_BASE: str = Field(default="https://openrouter.ai/api/v1")
+    CLOUDINARY_CLOUD_NAME: str = Field(..., description="Cloud Name")
+    CLOUDINARY_API_KEY: str = Field(..., description="Cloudinary API Key")
+    CLOUDINARY_SECRET: str = Field(..., description="Cloudinary Secret")
+    CLOUDINARY_FOLDER_NAME: str = Field(
+        ..., description="Cloudinary Folder, where media is stored"
+    )
 
     # Fixed project paths - these are computed properties, not from env vars
     @property
@@ -33,6 +38,10 @@ class Settings(BaseSettings):
         "OPENAI_API_KEY",
         "GEMINI_API_KEY",
         "OPENAI_LLM",
+        "CLOUDINARY_CLOUD_NAME",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_SECRET",
+        "CLOUDINARY_FOLDER_NAME",
         mode="before",
     )
     @classmethod
@@ -79,5 +88,3 @@ def create_config() -> Settings:
 
 # Instantiate this globally
 config = create_config()
-
-
