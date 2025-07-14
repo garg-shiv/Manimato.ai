@@ -1,23 +1,62 @@
+import asyncio
 import json
+import logging
 import os
+from typing import AsyncGenerator
 
-import google.generativeai as genai
 import numpy as np
-from dotenv import load_dotenv
+from core.config import config
+from google import generativeai as genai
+from langchain.callbacks.base import AsyncCallbackHandler
 from langchain.prompts import PromptTemplate
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 from pydantic.v1 import SecretStr  # This is from Pydantic v1 compat mode
+from schemas.stream import StreamMarkers
 
 from app.schemas.inference import InferenceRequest, InferenceResponse
 from app.services.render_service import render_manim_script
 
-# pyright: reportPrivateImportUsage=false
-# Load .env values
-load_dotenv()
 
+class CodeStreamCallback(AsyncCallbackHandler):
+    """Callback handler for streaming code generation"""
+
+    def __init__(self):
+        self.queue = asyncio.Queue()
+        self.error_occurred = False
+
+    async def on_llm_new_token(self, token: str, **kwargs) -> None:
+        """Handle new token from LLM"""
+        await self.queue.put(token)
+
+    async def on_llm_end(self, response, **kwargs) -> None:
+        """Handle LLM completion"""
+        await self.queue.put(StreamMarkers.STREAM_END)
+
+    async def on_llm_error(self, error, **kwargs) -> None:
+        """Handle LLM error"""
+
+        await self.queue.put(f"{StreamMarkers.STREAM_ERROR} {str(error)}")
+
+    async def put_custom_error(self, message: str):
+        """customer error message (for use in inference method)"""
+
+        await self.queue.put(f"{StreamMarkers.STREAM_ERROR} {str(message)}")
+        await self.queue.put(StreamMarkers.STREAM_END)
+
+    async def astream(self) -> AsyncGenerator[str, None]:
+        """Stream tokens from the queue"""
+        while True:
+            token = await self.queue.get()
+            if token == StreamMarkers.STREAM_END:
+                break
+            yield token
+
+
+# pyright: reportPrivateImportUsage=false
 # Configure Gemini embedding model
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "dummy"))
+genai.configure(api_key=config.GEMINI_API_KEY)
+logger = logging.getLogger(__name__)
 
 
 class ChainManager:
@@ -81,7 +120,89 @@ class ChainManager:
         context = "\n\n".join(doc.page_content for doc in top_k_docs)
 
         # Prompt template
-        prompt_template = PromptTemplate(
+        prompt_template = self._get_prompt_template()
+        final_prompt = prompt_template.format(question=query, context=context)
+
+        response = llm.invoke(final_prompt)
+
+        # Force extract a string from whatever comes out
+        if hasattr(response, "content"):
+            result_str = response.content
+        elif isinstance(response, str):
+            result_str = response
+        elif isinstance(response, list):
+            result_str = str(response[0]) if response else ""
+        else:
+            result_str = str(response)
+
+        # Now Pylance will chill because it's strictly a str
+        return InferenceResponse(result=str(result_str))
+
+    async def run_inference_stream(
+        self, request: InferenceRequest
+    ) -> AsyncGenerator[str, None]:
+        """
+        Streaming inference that yields code chunks
+
+        This method now properly handles streaming and error cases
+        """
+        query = request.prompt
+
+        try:
+            # Retrieve top-k docs
+            top_k_docs = self._retrieve_top_k(query, self.documents, k=4)
+            context = "\n\n".join(doc.page_content for doc in top_k_docs)
+
+            # Prompt template
+            prompt_template = self._get_prompt_template()
+            final_prompt = prompt_template.format(question=query, context=context)
+
+            # Create callback for streaming
+            callback = CodeStreamCallback()
+
+            # Load LLM from config
+            llm = ChatOpenAI(
+                model=config.OPENAI_LLM,
+                temperature=0.1,
+                api_key=SecretStr(config.OPENAI_API_KEY),
+                base_url=config.OPENAI_API_BASE,
+                streaming=True,
+                callbacks=[callback],
+            )
+
+            # Start the LLM inference in a background task
+            async def _run_inference():
+                try:
+                    await llm.ainvoke(final_prompt)
+                except Exception as e:
+                    logger.error(f"LLM inference error: {str(e)}")
+                    await callback.put_custom_error(str(e))
+                finally:
+                    await callback.queue.put("__END__")
+
+            # Start the inference task
+            asyncio.create_task(_run_inference())
+
+            # Stream the results
+            async for token in callback.astream():
+                yield token
+        except Exception as e:
+            logger.error(f"Stream setup error: {str(e)}")
+            yield f"{StreamMarkers.STREAM_ERROR} Stream setup error: {str(e)}"
+            yield StreamMarkers.STREAM_END
+
+    async def generate_video_from_prompt(self, prompt: str) -> str:
+        # Use your own run_inference logic
+        request = InferenceRequest(prompt=prompt)
+        response = await self.run_inference(request)
+
+        script = response.result
+        video_path = render_manim_script(script)
+        return video_path
+
+    def _get_prompt_template(self) -> PromptTemplate:
+        """Get the prompt template for code generation"""
+        return PromptTemplate(
             input_variables=["question", "context"],
             template="""
         You are an expert Manim Community v0.19 code generator. Your job is to convert a natural language input into a valid Python animation using only the manim and math libraries.
@@ -112,29 +233,3 @@ class ChainManager:
         {context}
         """,
         )
-
-        final_prompt = prompt_template.format(question=query, context=context)
-
-        response = llm.invoke(final_prompt)
-
-        # Force extract a string from whatever comes out
-        if hasattr(response, "content"):
-            result_str = response.content
-        elif isinstance(response, str):
-            result_str = response
-        elif isinstance(response, list):
-            result_str = str(response[0]) if response else ""
-        else:
-            result_str = str(response)
-
-        # Now Pylance will chill because it's strictly a str
-        return InferenceResponse(result=str(result_str))
-
-    async def generate_video_from_prompt(self, prompt: str) -> str:
-        # Use your own run_inference logic
-        request = InferenceRequest(prompt=prompt)
-        response = await self.run_inference(request)
-
-        script = response.result
-        video_path = render_manim_script(script)
-        return video_path

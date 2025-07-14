@@ -1,6 +1,7 @@
 import os
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 
 from app.deps import get_chain_manager
 from app.schemas.inference import InferenceRequest
@@ -20,5 +21,16 @@ async def generate_video(
         # Step 3: Return relative URL
         return {"status": "success", "video_url": f"/videos/{os.path.basename(result)}"}
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/stream-code")
+async def stream_code(
+    data: InferenceRequest, chain_manager: ChainManager = Depends(get_chain_manager)
+):
+    try:
+        stream = await chain_manager.run_inference_stream(data)
+        return StreamingResponse(stream, media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

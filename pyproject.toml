@@ -21,6 +21,10 @@ dependencies = [
     "jwt>=1.4.0",
     "pydantic[email]>=2.11.7",
     "pydantic-settings>=2.10.1",
+    "bcrypt==3.2.2",
+    "pyjwt>=2.10.1",
+    "cloudinary>=1.44.1",
+    "aiofiles>=24.1.0",
 ]
 
 [dependency-groups]
@@ -45,7 +49,7 @@ lint-fix = "ruff check . --fix"
 test = "pytest"
 export = "uv export --format=requirements.txt --no-hashes > requirements.txt"
 migrate = "alembic upgrade head"
-clean-pycache = "echo 'Running: clean-pycache' && find . -type d -name '__pycache__' -print -exec rm -r {} +"
+clean-pycache = "echo 'Running: clean-pycache' && find ./app -type d -name '__pycache__' -print -exec rm -r {} +"
 
 [tool.ruff]
 line-length = 88
