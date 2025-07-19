@@ -5,8 +5,8 @@ from datetime import datetime
 from typing import AsyncGenerator, Optional
 
 import aiofiles
-from schemas.inference import InferenceRequest
-from services.cloud_service import CloudStorage
+from app.schemas.inference import InferenceRequest
+from app.services.cloud_service import CloudStorage
 from sqlalchemy.orm import Session
 
 from app.database.models import Code

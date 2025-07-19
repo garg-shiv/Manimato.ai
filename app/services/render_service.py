@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import uuid
 
-from core.config import config
+from app.core.config import config
 
 
 def cleanup_manim_files(script_filename: str):
@@ -53,7 +53,7 @@ def cleanup_manim_files(script_filename: str):
     print(f"Cleanup completed for script: {script_filename}")
 
 
-def render_manim_script(script: str) -> str:
+async def render_manim_script(script: str) -> str:
     output_dir = config.GENERATED_DIR
     script_filename = f"script_{uuid.uuid4().hex[:8]}"
     script_path = os.path.join(output_dir, f"{script_filename}.py")

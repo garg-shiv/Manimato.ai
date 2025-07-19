@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta, timezone
+
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
-import jwt  
-from datetime import datetime, timedelta, timezone
+
 from app.database.models.user import User
 from app.database.session import get_db
 from app.utils.hashing_function import hash_password, verify_password

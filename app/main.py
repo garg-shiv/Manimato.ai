@@ -1,27 +1,37 @@
 import logging
 from pathlib import Path
-from app.routers.health import router as health_router
-
-
-
-from core.config import config
+import os
+from app.core.config import config
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.middlewares.cors import add_cors_middleware
-from app.middlewares.request_logger import add_request_logger_middleware
-from app.routers.v1.router import router as v1_router
+
 
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path, override=True)
 config.init()
 
+# Sanity check for env loading
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    raise RuntimeError("DATABASE_URL not found in environment variables!")
+
+from app.middlewares.cors import add_cors_middleware
+from app.middlewares.request_logger import add_request_logger_middleware
+from app.routers.health import router as health_router
+from app.routers.v1.router import router as v1_router
+
+
+
+
+
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
-
+logger.info(f"Loaded DATABASE_URL: {database_url}")
 
 app = FastAPI(
     title="Manim Code Generator API",

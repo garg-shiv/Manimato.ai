@@ -5,18 +5,25 @@ import os
 from typing import AsyncGenerator
 
 import numpy as np
-from core.config import config
+from app.core.config import config
 from google import generativeai as genai
 from langchain.callbacks.base import AsyncCallbackHandler
 from langchain.prompts import PromptTemplate
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
-from pydantic.v1 import SecretStr  # This is from Pydantic v1 compat mode
-from schemas.stream import StreamMarkers
+from pydantic.v1 import SecretStr
+from app.schemas.stream import StreamMarkers
+from dotenv import load_dotenv
 
+load_dotenv()
 from app.schemas.inference import InferenceRequest, InferenceResponse
-from app.services.render_service import render_manim_script
+from app.services import render_service
 
+# pyright: reportPrivateImportUsage=false
+# Configure Gemini embedding model
+
+genai.configure(api_key=config.GEMINI_API_KEY)
+logger = logging.getLogger(__name__)
 
 class CodeStreamCallback(AsyncCallbackHandler):
     """Callback handler for streaming code generation"""
@@ -37,6 +44,7 @@ class CodeStreamCallback(AsyncCallbackHandler):
         """Handle LLM error"""
 
         await self.queue.put(f"{StreamMarkers.STREAM_ERROR} {str(error)}")
+        logger.error(f"LLM error: {str(error)}")
 
     async def put_custom_error(self, message: str):
         """customer error message (for use in inference method)"""
@@ -53,10 +61,6 @@ class CodeStreamCallback(AsyncCallbackHandler):
             yield token
 
 
-# pyright: reportPrivateImportUsage=false
-# Configure Gemini embedding model
-genai.configure(api_key=config.GEMINI_API_KEY)
-logger = logging.getLogger(__name__)
 
 
 class ChainManager:
@@ -109,10 +113,10 @@ class ChainManager:
         # Load LLM from .env
 
         llm = ChatOpenAI(
-            model=os.getenv("OPENAI_LLM", "deepseek/deepseek-r1-0528:free"),
+            model=config.OPENAI_LLM,
             temperature=0.1,
-            api_key=SecretStr(os.getenv("OPENAI_API_KEY", "dummy")),
-            base_url=os.getenv("OPENAI_API_BASE", "https://openrouter.ai/api/v1"),
+            api_key=SecretStr(config.OPENAI_API_KEY),
+            base_url=config.OPENAI_API_BASE,
         )
 
         # Retrieve top-k docs
@@ -143,8 +147,6 @@ class ChainManager:
     ) -> AsyncGenerator[str, None]:
         """
         Streaming inference that yields code chunks
-
-        This method now properly handles streaming and error cases
         """
         query = request.prompt
 
@@ -160,7 +162,7 @@ class ChainManager:
             # Create callback for streaming
             callback = CodeStreamCallback()
 
-            # Load LLM from config
+            # Load LLM from config - FIXED THE TYPO
             llm = ChatOpenAI(
                 model=config.OPENAI_LLM,
                 temperature=0.1,
@@ -197,7 +199,7 @@ class ChainManager:
         response = await self.run_inference(request)
 
         script = response.result
-        video_path = render_manim_script(script)
+        video_path = await render_service.render_manim_script(script)
         return video_path
 
     def _get_prompt_template(self) -> PromptTemplate:

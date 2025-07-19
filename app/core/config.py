@@ -19,6 +19,7 @@ class Settings(BaseSettings):
         ..., description="Cloudinary Folder, where media is stored"
     )
 
+
     # Fixed project paths - these are computed properties, not from env vars
     @property
     def PROJECT_ROOT(self) -> Path:
@@ -58,6 +59,7 @@ class Settings(BaseSettings):
         self.MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
     def init(self):
+        print(self.DATABASE_URL)
         """Initialize the configuration and create directories."""
         self.ensure_directories()
         print(" Environment validated successfully.")

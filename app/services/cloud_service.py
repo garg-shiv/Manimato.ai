@@ -4,11 +4,10 @@ import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict
-
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
-from core.config import config
+from app.core.config import config
 
 logger = logging.getLogger(__name__)
 
