@@ -3,6 +3,9 @@
 **Manimato** is an AI-assisted tool for creating **mathematical animations** using the [Manim](https://www.manim.community/) engine.  
 This project simplifies the creation of animations that visualize complex mathematical concepts like **trigonometric transformations, geometry, and more.**
 
+
+> **Frontend Repository:** [ Manimato Frontend](https://github.com/HarshS490/manimato-frontend)
+
 ---
 
 ## 🎥 Demo
