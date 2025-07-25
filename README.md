@@ -1,17 +1,21 @@
-# FastAPI LLM Service
+# Manimato
 
-A FastAPI-based service for LLM interactions using Google's Gemini API and LangChain.
+**Manimato** is an AI-assisted tool for creating **mathematical animations** using the [Manim](https://www.manim.community/) engine.  
+This project simplifies the creation of animations that visualize complex mathematical concepts like **trigonometric transformations, geometry, and more.**
 
-## Features
+---
 
-- **FastAPI Framework**: Modern, fast (high-performance) web framework
-- **Gemini Integration**: Google's Gemini AI model integration
-- **LangChain Support**: Advanced LLM chain operations
-- **Async Operations**: Full async/await support
-- **Request Logging**: Comprehensive request/response logging
-- **Error Handling**: Custom exception handling
-- **CORS Support**: Cross-origin resource sharing
-- **Health Checks**: Built-in health check endpoints
+## 🎥 Demo
+
+### **Trigonometric Function Transformations**  
+The animation below demonstrates the transformations of **sine, cosine, and tangent** functions, including:
+- Amplitude changes
+- Horizontal and vertical shifts
+- Period modifications
+#### Prompt:
+```show transformation of trigonometric functions to each other like sine, cosine, tan ```
+#### Animation:
+https://github.com/user-attachments/assets/26214006-300a-47b5-b757-7bf1f2b51e79
 
 ## Project Structure
 
