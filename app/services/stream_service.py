@@ -124,7 +124,7 @@ class StreamService:
             async for chunk in stream:
                 if chunk == StreamMarkers.STREAM_END:
                     yield StreamEvent(
-                        type="ai_completed",
+                        type="completed",
                         data="AI streaming completed",
                         message_id=message_id,
                     )
