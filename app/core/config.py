@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     CLOUDINARY_FOLDER_NAME: str = Field(
         ..., description="Cloudinary Folder, where media is stored"
     )
+    ENV: str = Field("dev", description="Environment type (dev | prod)")
 
 
     # Fixed project paths - these are computed properties, not from env vars
@@ -62,6 +63,7 @@ class Settings(BaseSettings):
         print(self.DATABASE_URL)
         """Initialize the configuration and create directories."""
         self.ensure_directories()
+        
         print(" Environment validated successfully.")
         print("Created ./generated and ./media")
 
