@@ -9,7 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from core.config import config
+from app.core.config import config
 
 from .exceptions import ApiException
 from .logger import log_error, log_warning
